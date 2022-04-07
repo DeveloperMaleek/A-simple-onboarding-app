@@ -10,6 +10,20 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  String firstName = "";
+
+  @override
+  void initState() {
+    getFirstName();
+    super.initState();
+  }
+
+  void getFirstName() async {
+    // String firstName = "";
+    var db = await AppDatabase().initDb();
+    DBOperations(db).users().then((value) => {firstName = value[0].first_name});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,12 +33,16 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text("Homepage is here"),
+            Text("Hey There! $firstName"),
             ElevatedButton(
                 onPressed: () async {
                   var db = await AppDatabase().initDb();
                   DBOperations(db).deleteRecord();
-                  Navigator.defaultRouteName;
+                  var isLogged =
+                      await DBOperations(db).users().then((value) => {
+                            if (value.length <= 0)
+                              {Navigator.pushNamed(context, "/login")}
+                          });
                 },
                 child: Text("Logout"))
           ],

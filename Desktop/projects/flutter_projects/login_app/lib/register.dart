@@ -21,72 +21,84 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Color(0xFFf7f7f7),
-        body: Container(
-          margin: EdgeInsets.only(left: 24, right: 24, bottom: 24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                "Create an account \nin one click",
-                style: TextStyle(
-                    color: Colors.blue,
-                    fontSize: 30,
-                    fontWeight: FontWeight.w600),
-              ),
-              const SizedBox(
-                height: 48,
-              ),
-              _firstName(),
-              const SizedBox(
-                height: 16,
-              ),
-              _lastName(),
-              const SizedBox(
-                height: 16,
-              ),
-              _email(),
-              const SizedBox(
-                height: 16,
-              ),
-              _passwordfield(),
-              const SizedBox(
-                height: 24,
-              ),
-              Container(
-                  width: double.maxFinite,
-                  height: 50,
-                  child: ElevatedButton(
-                      onPressed: (() async {
-                        var db = await AppDatabase().initDb();
-                        DBOperations(db).insertRecord(
-                            firstName, lastName, password, emailAddress);
-                      }),
-                      style: ElevatedButton.styleFrom(elevation: 0),
-                      child: Text("Register"))),
-              const SizedBox(
-                height: 16,
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("Already a user? "),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pushNamed(context, "/login");
-                      },
-                      child: Text(
-                        "Login",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w700, color: Colors.blue),
-                      ),
-                    )
-                  ],
+        body: SingleChildScrollView(
+          child: Container(
+            height: MediaQuery.of(context).size.height,
+            margin: EdgeInsets.only(left: 24, right: 24, bottom: 24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  "Create an account \nin one click",
+                  style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 30,
+                      fontWeight: FontWeight.w600),
                 ),
-              )
-            ],
+                const SizedBox(
+                  height: 48,
+                ),
+                _firstName(),
+                const SizedBox(
+                  height: 16,
+                ),
+                _lastName(),
+                const SizedBox(
+                  height: 16,
+                ),
+                _email(),
+                const SizedBox(
+                  height: 16,
+                ),
+                _passwordfield(),
+                const SizedBox(
+                  height: 24,
+                ),
+                Container(
+                    width: double.maxFinite,
+                    height: 50,
+                    child: ElevatedButton(
+                        onPressed: (() async {
+                          var db = await AppDatabase().initDb();
+                          DBOperations(db).insertRecord(
+                              firstName, lastName, password, emailAddress);
+                          print(firstName + lastName + password + emailAddress);
+                          var isLogged =
+                              await DBOperations(db).users().then((value) => {
+                                    if (value.length > 0)
+                                      {
+                                        Navigator.pushNamed(
+                                            context, "/homepage")
+                                      }
+                                  });
+                        }),
+                        style: ElevatedButton.styleFrom(elevation: 0),
+                        child: Text("Register"))),
+                const SizedBox(
+                  height: 16,
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("Already a user? "),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamed(context, "/login");
+                        },
+                        child: Text(
+                          "Login",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w700, color: Colors.blue),
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
         ));
   }

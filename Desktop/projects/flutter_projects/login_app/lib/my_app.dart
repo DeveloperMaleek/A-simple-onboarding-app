@@ -14,9 +14,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: "/",
       routes: {
-        "/login": (context) => LoginPage(title: "Login Page"),
-        "/register": (context) => RegisterPage(title: "Register Page"),
-        "/homepage": (context) => HomePage(),
+        "/login": (context) => const LoginPage(title: "Login Page"),
+        "/register": (context) => const RegisterPage(title: "Register Page"),
+        "/homepage": (context) => const HomePage(),
       },
       theme: ThemeData(
         primarySwatch: Colors.blue,

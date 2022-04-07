@@ -34,89 +34,115 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color(0xFFf7f7f7),
         body: Container(
-          margin: EdgeInsets.only(left: 24, right: 24, bottom: 24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "Welcome back, $firstName",
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 24,
-                    fontWeight: FontWeight.w600),
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage("assets/images/image1.jpg"),
+                    fit: BoxFit.cover)),
+            height: MediaQuery.of(context).size.height,
+            child: Container(
+              height: 500,
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(colors: [
+                Colors.black26.withOpacity(0.4),
+                Colors.white60.withOpacity(0.4)
+              ], begin: Alignment.topLeft, end: Alignment.bottomRight)),
+              margin: EdgeInsets.only(left: 16, right: 16, bottom: 16),
+              padding: EdgeInsets.only(left: 16, right: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Welcome back...",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 24,
+                        fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(
+                    height: 4,
+                  ),
+                  const Text(
+                    "Login to your account",
+                    style: TextStyle(
+                        color: Colors.blue,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(
+                    height: 48,
+                  ),
+                  _inputfield(),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  _passwordfield(),
+                  const SizedBox(
+                    height: 24,
+                  ),
+                  Container(
+                      width: double.maxFinite,
+                      height: 50,
+                      child: ElevatedButton(
+                          onPressed: (() async {
+                            var db = await AppDatabase().initDb();
+                            DBOperations(db).users().then((value) => {
+                                  if (value[0].user_email == columnUserEmail &&
+                                      value[0].user_password == columnPassword)
+                                    {
+                                      Navigator.pushNamed(context, "/homepage"),
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(SnackBar(
+                                              content:
+                                                  Text("Login successfull")))
+                                    }
+                                  else if (value[0].user_email == null &&
+                                      value[0].user_password == null)
+                                    {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(SnackBar(
+                                              content: Text(
+                                                  "Incorrect user details")))
+                                    }
+                                  else
+                                    {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(SnackBar(
+                                              content: Text(
+                                                  "Incorrect user details")))
+                                    }
+                                });
+                            // Navigator.pushNamed(context, "/Login");
+                          }),
+                          style: ElevatedButton.styleFrom(elevation: 0),
+                          child: Text("LOGIN"))),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("New here? "),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(context, "/register");
+                          },
+                          child: const Text(
+                            "Create an account",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                color: Colors.blue),
+                          ),
+                        )
+                      ],
+                    ),
+                  )
+                ],
               ),
-              const SizedBox(
-                height: 4,
-              ),
-              const Text(
-                "Login to your account",
-                style: TextStyle(
-                    color: Colors.blue,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600),
-              ),
-              const SizedBox(
-                height: 48,
-              ),
-              _inputfield(),
-              const SizedBox(
-                height: 16,
-              ),
-              _passwordfield(),
-              const SizedBox(
-                height: 24,
-              ),
-              Container(
-                  width: double.maxFinite,
-                  height: 50,
-                  child: ElevatedButton(
-                      onPressed: (() async {
-                        var db = await AppDatabase().initDb();
-                        DBOperations(db).users().then((value) => {
-                              print(columnUserEmail),
-                              print(columnPassword),
-                              if (value[0].user_email == columnUserEmail &&
-                                  value[0].user_password == columnPassword)
-                                {Navigator.pushNamed(context, "/homepage")}
-                              else
-                                {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                          content: Text("Data not correct")))
-                                }
-                            });
-                        // Navigator.pushNamed(context, "/Login");
-                      }),
-                      style: ElevatedButton.styleFrom(elevation: 0),
-                      child: Text("LOGIN"))),
-              const SizedBox(
-                height: 16,
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("New here? "),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pushNamed(context, "/register");
-                      },
-                      child: const Text(
-                        "Create an account",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w700, color: Colors.blue),
-                      ),
-                    )
-                  ],
-                ),
-              )
-            ],
-          ),
-        ));
+            )));
   }
 
   TextFormField _inputfield() {

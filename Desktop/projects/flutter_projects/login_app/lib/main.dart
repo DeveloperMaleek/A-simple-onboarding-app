@@ -11,17 +11,16 @@ void main() async {
 
   final db = await AppDatabase().initDb();
   var isLogged = await DBOperations(db).users();
-  if (isLogged.length > 0) {
-    runApp(MaterialApp(home: (HomePage())));
-  } else {
-    runApp(MaterialApp(
-      home: LoginPage(title: "title"),
-    ));
-  }
+  // if (isLogged.length > 0) {
+  //   runApp(MaterialApp(home: (HomePage())));
+  // } else {
+  //   runApp(MaterialApp(
+  //     home: LoginPage(title: "title"),
+  //   ));
+
+  runApp(MyApp());
+}
 
   // final db = await AppDatabase().initDb();
   // DBOperations(db).insertRecord(
   //     "Malik", "Kolade", "malikademola", "malikademola36@gmail.com");
-
-  
-}
